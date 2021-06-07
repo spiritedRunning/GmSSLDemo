@@ -11,6 +11,7 @@
 #include "utils.h"
 #include <syslog.h>
 #include <openssl/pem.h>
+#include "log.h"
 
 using std::string;
 
@@ -165,9 +166,11 @@ Java_com_example_gmssldemo_MainActivity_genSM2KeyPairs(JNIEnv *env,
 
     std::string p1 = path;
     p1.append("/private");
+    LOGI("private key path: %s", p1.c_str());
 
     std::string p2 = path;
     p2.append("/public");
+    LOGI("public key path: %s", p2.c_str());
 
     EC_KEY *ec_key = EC_KEY_new();
     ec_key = EC_KEY_new_by_curve_name(NID_sm2p256v1);
@@ -181,7 +184,10 @@ Java_com_example_gmssldemo_MainActivity_genSM2KeyPairs(JNIEnv *env,
     char *privateChar = BN_bn2hex(privateKey);
 
     int iRet = writeBufToFile((char *) p1.c_str(), privateChar);
+    LOGI("private key create result: %d", iRet);
+
     iRet = writeBufToFile((char *) p2.c_str(), publicChar);
+    LOGI("public key create result: %d", iRet);
 
     EC_KEY_free(ec_key);
     return 0;
